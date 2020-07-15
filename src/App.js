@@ -1,26 +1,50 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {connect} from 'react-redux';
+import Game from './components/Game';
+import QuestionManager from './components/QuestionManager';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+    toQM = _ => {
+      this.props.dispatch({
+        type: "SWITCH_TO_QM"
+      })
+      this.props.dispatch({
+        type: "FINISH_GAME"
+      })
+    }
+
+    toGame = _ => {
+      this.props.dispatch({
+        type: "SWITCH_TO_GAME"
+      })
+    }
+
+    render() {
+      if (this.props.screen === "game") {
+        return (
+          <div>
+            <button onClick={this.toQM}>Switch to Question Manager</button>
+            <hr></hr>
+            <Game/>
+          </div>
+        )
+      }
+      else if (this.props.screen === "qm") {
+        return (
+          <div>
+            <button onClick={this.toGame}>Switch to Game</button>
+            <hr></hr>
+            <QuestionManager/>
+          </div>
+        )
+      }
+      else return (<div></div>)
+    }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  screen: state.screen
+})
+
+export default connect(mapStateToProps)(App);
